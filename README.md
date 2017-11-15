@@ -7,7 +7,7 @@ It is great for setting up an API Gateway on top of existing GraphQL endpoint, a
 
 ## Concepts
 
-Qewl crosses the gap between commonly used patterns for HTTP middleware frameworks like Koa and Express, and GraphQL endpoints.
+Qewl bridges the gap between commonly used patterns for HTTP middleware frameworks like Koa and Express, and GraphQL endpoints.
 A GraphQL server is composed of three components:
 - GraphQL schemas
 - Resolvers
