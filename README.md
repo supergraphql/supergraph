@@ -16,7 +16,7 @@ A GraphQL server is composed of three components:
 Qewl uses these same three components:
 - GraphQL schemas define the **routes** of our server
 - Resolvers define the **implementation** of these routes
-- Middleware is used to construct the **context** passed to every resolver, and to add **common functionality** to the resolvers
+- Application middleware is used to construct the **context** passed to every resolver, and router middleware is used to add **common functionality** to the resolvers
 
 ## Installation
 Qewl requires **node v7.6.0** or higher for ES2015 and async function support.
