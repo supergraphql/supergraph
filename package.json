@@ -1,0 +1,59 @@
+{
+  "name": "qewl",
+  "description": "Middleware platform for GraphQL gateways",
+  "version": "0.1.0",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "rm -rf dist && tsc",
+    "lint": "tslint ./src/**/*.ts",
+    "prettier": "prettier --single-quote --semi false --print-width 90 --write ./src/**/*.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "author": "Kim Brandwijk <kim.brandwijk@gmail.com>",
+  "homepage": "https://github.com/kbrandwijk/qewl#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbrandwijk/qewl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kbrandwijk/qewl/issues"
+  },
+  "keywords": [
+    "graphql",
+    "api-gateway",
+    "express",
+    "koa"
+  ],
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "apollo-link": "^1.0.0",
+    "graphql": "^0.11.7"
+  },
+  "dependencies": {
+    "apollo-link": "^1.0.0",
+    "apollo-link-http": "^1.1.0",
+    "apollo-server-express": "^1.2.0",
+    "express": "^4.16.2",
+    "graphql": "^0.11.7",
+    "graphql-add-middleware": "^0.1.2",
+    "graphql-tools": "^2.7.2",
+    "lodash": "^4.17.4",
+    "node-fetch": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.39",
+    "@types/lodash": "^4.14.85",
+    "@types/node": "^8.0.52",
+    "@types/node-fetch": "^1.6.7",
+    "@types/zen-observable": "^0.5.3",
+    "prettier": "1.8.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
+  }
+}
