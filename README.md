@@ -191,43 +191,54 @@ import { helloResolver } from './helloResolver'
 async function run() {
 
   const app = express()
+  const graphql = express.Router()
 
-  app.use(
-    '/graphql',
-
+  // Context
+  graphql.use(
     (req, res, next) => {
       const token = req.headers.authorization ? (req.headers.authorization as string).split(' ')[1] : null
       req.token = token
       next()
-    },
+    }
+  )
 
+  // Schemas
+  graphql.use(
     remoteSchema({
       name: 'graphcoolSchema',
       uri: process.env.GRAPHCOOL_ENDPOINT,
       authenticationToken: (context) => (context.graphqlContext || {}).token
     }),
-
     schema({name: 'hello', schema: helloSchema}),
+    schema(`extend type Query { myPosts: [Post] }`)
+  )
 
-    schema(`extend type Query { myPosts: [Post] }`),
-
+  // Resolvers middlewares
+  graphql.use(
     use('Query', async (event, next) => {
       // Do something before
       const result = await next()
       // Do something after
       return result
-    }),
+    })
+  )
 
+  // Resolvers
+  graphql.use(
     resolve('Query.hello', { resolve: helloResolver }),
 
     resolve('Query.myPosts', async(event) => {
       return event.delegate('query', 'allPosts')),
+  )
 
+  // Endpoint
+  graphql.use(
     cors(),
     bodyParser.json(),
     await qewl()
   )
 
+  app.use('/graphql', graphql)
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
   app.listen(3000, () => console.log('Server running. Open http://localhost:3000/playground to run queries.'))
