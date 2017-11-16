@@ -48,7 +48,7 @@ export const delegateQuery = (event: QewlRouterEvent) => (
   )
 }
 
-export const addTypeNameField = (info: GraphQLResolveInfo): GraphQLResolveInfo => {
+export const addTypenameField = (info: GraphQLResolveInfo): GraphQLResolveInfo => {
   const field: FieldNode = {
     kind: 'Field',
     name: { kind: 'Name', value: '__typename' }
@@ -86,5 +86,5 @@ export const addHelpers = (event: QewlRouterEvent) => {
   event.delegateQuery = delegateQuery(event)
   event.addFields = (fields: [FieldNode | string] | FieldNode | string) =>
     (event.info = addFields(event.info, fields))
-  event.addTypeNameField = () => (event.info = addTypeNameField(event.info))
+  event.addTypenameField = () => (event.info = addTypenameField(event.info))
 }

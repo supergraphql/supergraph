@@ -24,7 +24,7 @@ export interface QewlContext {
 }
 
 export interface QewlRouterMiddlewareHandler {
-  (event: QewlRouterEvent, next: any): any
+  (event: QewlRouterEvent, next: any): Promise<any> | any
 }
 
 export interface QewlRouterResolver {

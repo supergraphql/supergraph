@@ -141,7 +141,6 @@ function generateResolverBlock(
     context: { [key: string]: any },
     info: GraphQLResolveInfo
   ) => {
-    // TODO: This can't happen here, there might be middlewares...
     const event: any = { parent, args, context, info, mergeInfo: mergeInfo }
     addHelpers(event)
     return await resolveFn.resolve(event)
