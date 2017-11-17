@@ -37,8 +37,6 @@ Qewl makes it easy to set up a GraphQL Server from scratch. But this example rea
 Below is an example implementation, showcasing the Qewl API:
 ```ts
 import * as express from 'express'
-import * as cors from 'cors'
-import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
 import { schema, remoteSchema, use, resolve } from 'qewl'
 
@@ -92,12 +90,10 @@ async function run() {
 
   // Endpoint
   graphql.use(
-    cors(),
-    bodyParser.json(),
-    await qewl()
+    await serve()
   )
 
-  app.use('/graphql', graphql)
+  app.use('/graphql', express.json(), graphql)
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
   app.listen(3000, () => console.log('Server running. Open http://localhost:3000/playground to run queries.'))
