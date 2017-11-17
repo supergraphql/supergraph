@@ -8,13 +8,7 @@ import {
 import { Request } from 'express'
 
 export interface QewlMiddlewareHandler {
-  (context: QewlRuntimeContext): void
-}
-
-export interface QewlRuntimeContext {
-  schemas: { [key: string]: GraphQLSchema | string }
-  req: Request
-  [key: string]: any
+  (context: Request): void
 }
 
 export interface QewlContext {

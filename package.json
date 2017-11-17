@@ -1,7 +1,7 @@
 {
   "name": "qewl",
   "description": "Middleware platform for GraphQL gateways",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
@@ -32,15 +32,13 @@
     "README.md"
   ],
   "peerDependencies": {
-    "apollo-link": "^1.0.0",
+    "apollo-link": "^1.0.3",
     "graphql": "^0.11.7"
   },
   "dependencies": {
-    "apollo-link": "^1.0.0",
-    "apollo-link-http": "^1.1.0",
+    "apollo-link-http": "^1.2.0",
     "apollo-server-express": "^1.2.0",
     "express": "^4.16.2",
-    "graphql": "^0.11.7",
     "graphql-add-middleware": "^0.1.2",
     "graphql-tools": "^2.7.2",
     "lodash": "^4.17.4",
