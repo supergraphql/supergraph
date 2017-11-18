@@ -1,4 +1,4 @@
-import { GraphQLSchema, parse, buildASTSchema } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 import { Request, Response, AsyncRequestHandler, NextFunction } from 'express'
 import { base } from './base'
 import { makeExecutableSchema } from 'graphql-tools'
@@ -17,7 +17,7 @@ export function schema(
 
     if (typeof def.schema === 'string') {
       try {
-        const actualSchema = makeExecutableSchema(def.schema)
+        const actualSchema = makeExecutableSchema({typeDefs: def.schema})
         def.schema = actualSchema
       } catch (e) {}
     }
