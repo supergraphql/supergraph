@@ -46,7 +46,7 @@ run()
 We have added an endpoint `/graphql` where our GraphQL server is going to live. We also created an endpoint `/playground` using the excellent [`graphql-playground-middleware`](https://github.com/graphcool/graphql-playground) package from [Graphcool](https://graph.cool), a GraphQL playground on steroids, so we can easily test our queries later on.
 
 ## Qewl!
-Now it's time to set up our Qewl middleware! We start by initializing our Qewl instance, and defining the schema for our GraphQL server. Qewl exposes an Express middleware that we're adding to our `/graphql` endpoint.
+Now it's time to set up our Qewl middleware! We start by setting up an Express route, and defining the schema for our GraphQL server. 
 ```diff
 import * as express from 'express'
 import * as cors from 'cors'
@@ -88,7 +88,7 @@ Congratulations, you have created your GraphQL server! You can now visit [http:/
 As you see, the query doesn't return any data yet. We have defined our GraphQL schema, but we haven't defined any **implementation** for the routes defined in our schema.
 
 ## Qewl resolver
-So let's get back to the code, and add our **resolver**. Our resolvers live in `qewl.router`.
+So let's get back to the code, and add our **resolver**.
 ```diff
 import * as express from 'express'
 import * as cors from 'cors'
