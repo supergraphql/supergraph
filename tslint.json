@@ -47,7 +47,7 @@
     "no-parameter-properties": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
-    "no-empty": true,
+    "no-empty": [true, "allow-empty-catch"],
     "no-eval": true,
     "no-inferrable-types": false,
     "no-internal-module": true,

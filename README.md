@@ -90,7 +90,7 @@ async function run() {
 
   // Endpoint
   graphql.use(
-    await serve()
+    serve()
   )
 
   app.use('/graphql', express.json(), graphql)
