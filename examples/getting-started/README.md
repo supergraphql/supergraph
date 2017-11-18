@@ -27,15 +27,13 @@ run()
 Now, let's create a route for our GraphQL server:
 ```diff
 import * as express from 'express'
-+import * as cors from 'cors'
-+import * as bodyParser from 'body-parser'
 +import { expressPlayground } from 'graphql-playground-middleware'
 
 async function run() {
 
   const app = express()
 
-+ app.use('/graphql', cors(), bodyParser.json())
++ app.use('/graphql', express.json())
 
 + app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
@@ -54,14 +52,15 @@ import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
-+import { Qewl } from 'qewl'
++import { schema } from 'qewl'
 
 async function run() {
 
   const app = express()
 
-+ const qewl = new Qewl()
-+   .schema(`
++ const grapqhl = express.Router()
++ graphql.use(
++   schema(`
 +     type HelloPayload {
 +       message: String
 +     }
@@ -70,9 +69,10 @@ async function run() {
 +       hello: HelloPayload
 +     }
 +   `)
++ )
 
-- app.use('/graphql', cors(), bodyParser.json())
-+ app.use('/graphql', cors(), bodyParser.json(), await qewl.middleware())
+- app.use('/graphql', express.json())
++ app.use('/graphql', express.json(), graphql, await serve())
 
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
@@ -94,28 +94,33 @@ import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
-import { Qewl } from 'qewl'
+-import { schema } from 'qewl'
++import { schema, resolve } from 'qewl'
 
 async function run() {
 
   const app = express()
 
-  const qewl = new Qewl()
-    .schema(`
+  const grapqhl = express.Router()
+  graphql.use(
+    schema(`
       type HelloPayload {
         message: String
       }
-
+ 
       type Query {
         hello: HelloPayload
       }
     `)
-+ qewl.router
-+   .resolve('Query.hello', async (event) => {
+  )
+
++ graphql.use(
++   resolve('Query.hello', async (event) => {
 +     return { message: `Hello ${event.args.name}!` }
 +   })
++ )
 
-  app.use('/graphql', cors(), bodyParser.json(), await qewl.middleware())
+  app.use('/graphql', express.json(), graphql, await serve())
 
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
