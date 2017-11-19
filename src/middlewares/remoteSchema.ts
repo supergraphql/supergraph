@@ -20,7 +20,7 @@ export function remoteSchema({
   introspectionSchema?: GraphQLSchema
   link?: ApolloLink
   authenticationToken?: (req: Request) => string
-  forwardHeaders: boolean | Array<string>
+  forwardHeaders?: boolean | Array<string>
 }): AsyncRequestHandler {
   if (!uri && !link) {
     throw new Error('Specify either uri or link to define remote schema')
