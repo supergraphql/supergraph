@@ -27,15 +27,13 @@ run()
 Now, let's create a route for our GraphQL server:
 ```diff
 import * as express from 'express'
-+import * as cors from 'cors'
-+import * as bodyParser from 'body-parser'
 +import { expressPlayground } from 'graphql-playground-middleware'
 
 async function run() {
 
   const app = express()
 
-+ app.use('/graphql', cors(), bodyParser.json())
++ app.use('/graphql', express.json())
 
 + app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
@@ -48,20 +46,21 @@ run()
 We have added an endpoint `/graphql` where our GraphQL server is going to live. We also created an endpoint `/playground` using the excellent [`graphql-playground-middleware`](https://github.com/graphcool/graphql-playground) package from [Graphcool](https://graph.cool), a GraphQL playground on steroids, so we can easily test our queries later on.
 
 ## Qewl!
-Now it's time to set up our Qewl middleware! We start by initializing our Qewl instance, and defining the schema for our GraphQL server. Qewl exposes an Express middleware that we're adding to our `/graphql` endpoint.
+Now it's time to set up our Qewl middleware! We start by setting up an Express route, and defining the schema for our GraphQL server. 
 ```diff
 import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
-+import { Qewl } from 'qewl'
++import { schema } from 'qewl'
 
 async function run() {
 
   const app = express()
 
-+ const qewl = new Qewl()
-+   .schema(`
++ const grapqhl = express.Router()
++ graphql.use(
++   schema(`
 +     type HelloPayload {
 +       message: String
 +     }
@@ -70,9 +69,10 @@ async function run() {
 +       hello: HelloPayload
 +     }
 +   `)
++ )
 
-- app.use('/graphql', cors(), bodyParser.json())
-+ app.use('/graphql', cors(), bodyParser.json(), await qewl.middleware())
+- app.use('/graphql', express.json())
++ app.use('/graphql', express.json(), graphql, await serve())
 
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
@@ -88,34 +88,39 @@ Congratulations, you have created your GraphQL server! You can now visit [http:/
 As you see, the query doesn't return any data yet. We have defined our GraphQL schema, but we haven't defined any **implementation** for the routes defined in our schema.
 
 ## Qewl resolver
-So let's get back to the code, and add our **resolver**. Our resolvers live in `qewl.router`.
+So let's get back to the code, and add our **resolver**.
 ```diff
 import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
-import { Qewl } from 'qewl'
+-import { schema } from 'qewl'
++import { schema, resolve } from 'qewl'
 
 async function run() {
 
   const app = express()
 
-  const qewl = new Qewl()
-    .schema(`
+  const grapqhl = express.Router()
+  graphql.use(
+    schema(`
       type HelloPayload {
         message: String
       }
-
+ 
       type Query {
         hello: HelloPayload
       }
     `)
-+ qewl.router
-+   .resolve('Query.hello', async (event) => {
+  )
+
++ graphql.use(
++   resolve('Query.hello', async (event) => {
 +     return { message: `Hello ${event.args.name}!` }
 +   })
++ )
 
-  app.use('/graphql', cors(), bodyParser.json(), await qewl.middleware())
+  app.use('/graphql', express.json(), graphql, await serve())
 
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 

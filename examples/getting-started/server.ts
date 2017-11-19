@@ -2,29 +2,32 @@ import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { expressPlayground } from 'graphql-playground-middleware'
-import { Qewl } from 'qewl'
+import { schema, resolve } from 'qewl'
 
 async function run() {
 
   const app = express()
 
-  const qewl = new Qewl()
-  qewl.schema(`
+  const grapqhl = express.Router()
+  graphql.use(
+    schema(`
       type HelloPayload {
         message: String
       }
-
+ 
       type Query {
-        hello(name: String!): HelloPayload
+        hello: HelloPayload
       }
     `)
+  )
 
-  qewl.router
-    .resolve('Query.hello', async (event) => {
+  graphql.use(
+    resolve('Query.hello', async (event) => {
       return { message: `Hello ${event.args.name}!` }
     })
+  )
 
-  app.use('/graphql', cors(), bodyParser.json(), await qewl.middleware())
+  app.use('/graphql', express.json(), graphql, await serve())
 
   app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
 
