@@ -1,5 +1,6 @@
 import { GraphQLSchema } from 'graphql'
 import { ApolloLink } from 'apollo-link'
+import fetch from 'node-fetch'
 import { createHttpLink } from 'apollo-link-http'
 import { introspectSchema, makeRemoteExecutableSchema } from 'graphql-tools'
 import { Request, Response, AsyncRequestHandler, NextFunction } from 'express'
