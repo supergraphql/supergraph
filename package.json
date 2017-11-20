@@ -1,7 +1,7 @@
 {
   "name": "qewl",
   "description": "Middleware platform for GraphQL gateways",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
