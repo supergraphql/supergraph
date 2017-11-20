@@ -75,14 +75,19 @@ async function run() {
     transform(`
       type Query {
         getWeatherByCity(city: String): WeatherPayload
+        # other queries are removed here
       }
+
+      # Mutation type is removed entirely, because it isn't specified
 
       type WeatherPayload {
         temp(unit: UnitEnum): Float
+        # other fields are removed here
       }
 
       enum UnitEnum {
         Celcius
+        # other enum value is removed here
       }`)
   )
 
