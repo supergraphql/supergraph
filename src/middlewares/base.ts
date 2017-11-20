@@ -1,11 +1,15 @@
 import { Request, Response, NextFunction, AsyncRequestHandler } from 'express'
-import { merge } from 'lodash'
+import { Qewl } from '../Qewl'
+
+
 
 export const base = (
   fn: (req: Request, res: Response, next: NextFunction) => Promise<any> | any
 ): AsyncRequestHandler => {
   return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    req.qewl = merge({ schemas: {}, resolvers: [], middlewares: [] }, req.qewl)
+    if (!req.qewl) {
+      req.qewl = new Qewl()
+    }
 
     try {
       await fn(req, res, next)

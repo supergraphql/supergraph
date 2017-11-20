@@ -46,6 +46,8 @@ export function generateSchemaImpl(req: Request) {
     for (const middleware of req.qewl.middlewares) {
       addMiddleware(req.qewl.schemas.mergedSchema, middleware.path, middleware.fn)
     }
+
+    req.qewl.emit('schemaGenerated', req.qewl.schemas.mergedSchema)
   }
 }
 
