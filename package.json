@@ -1,7 +1,7 @@
 {
   "name": "qewl",
   "description": "Middleware platform for GraphQL gateways",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
@@ -41,6 +41,7 @@
     "express": "^4.16.2",
     "graphql-add-middleware": "^0.1.2",
     "graphql-tools": "^2.7.2",
+    "https-proxy-agent": "^2.1.0",
     "lodash": "^4.17.4",
     "node-fetch": "^1.7.3"
   },

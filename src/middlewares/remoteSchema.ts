@@ -7,6 +7,7 @@ import { Request, Response, AsyncRequestHandler, NextFunction } from 'express'
 import { base } from './base'
 import { merge } from 'lodash'
 import { isBoolean } from 'util'
+import * as HttpsProxyAgent from 'https-proxy-agent'
 
 export function remoteSchema({
   name,
@@ -29,7 +30,11 @@ export function remoteSchema({
 
   return base(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     if (link === undefined) {
-      const httpLink: ApolloLink = createHttpLink({ uri, fetch: fetch as any })
+      const httpLink: ApolloLink = createHttpLink({
+        uri,
+        fetch: fetch as any,
+        fetchOptions: process.env.HTTPS_PROXY ? { agent: new HttpsProxyAgent(process.env.HTTPS_PROXY) } : {}
+      })
 
       if (authenticationToken !== undefined) {
         link = new ApolloLink((operation, forward) => {
