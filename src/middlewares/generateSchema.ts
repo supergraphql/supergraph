@@ -6,6 +6,7 @@ import { addHelpers } from '../helpers'
 import { set, merge } from 'lodash'
 import { mergeSchemas } from 'graphql-tools'
 import { addMiddleware } from 'graphql-add-middleware'
+import { put, get } from 'memory-cache'
 
 export function generateSchema(): AsyncRequestHandler {
   return base(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -20,7 +21,7 @@ export function generateSchemaImpl(req: Request) {
   }
 
   // Only construct schema once
-  if (!req.qewl.schemas.mergedSchema) {
+  if (!get('mergedSchema')) {
     // Apply router resolvers
     const resolvers = (mergeInfo: any) => {
       const resolverBlocks: Array<any> = req.qewl.resolvers.map(resolver =>
@@ -47,8 +48,12 @@ export function generateSchemaImpl(req: Request) {
       addMiddleware(req.qewl.schemas.mergedSchema, middleware.path, middleware.fn)
     }
 
-    req.qewl.emit('schemaGenerated', req.qewl.schemas.mergedSchema)
+    put('mergedSchema', req.qewl.schemas.mergedSchema)
+  } else {
+    req.qewl.schemas.mergedSchema = get('mergedSchema')
   }
+
+  req.qewl.emit('schemaGenerated', req.qewl.schemas.mergedSchema)
 }
 
 function generateResolverBlock(
