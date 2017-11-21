@@ -52,7 +52,7 @@ export function remoteSchema({
               merge(headers, { Authorization: `Bearer ${authenticationToken(ctx)}` })
             }
 
-            return headers
+            return { headers }
           })
           return forward!(operation)
         }).concat(httpLink)
