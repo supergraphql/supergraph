@@ -21,7 +21,7 @@ export function generateSchemaImpl(req: Request) {
   }
 
   // Only construct schema once
-  if (!get('mergedSchema')) {
+  if (!get('qewl.mergedSchema')) {
     // Apply router resolvers
     const resolvers = (mergeInfo: any) => {
       const resolverBlocks: Array<any> = req.qewl.resolvers.map(resolver =>
@@ -48,9 +48,9 @@ export function generateSchemaImpl(req: Request) {
       addMiddleware(req.qewl.schemas.mergedSchema, middleware.path, middleware.fn)
     }
 
-    put('mergedSchema', req.qewl.schemas.mergedSchema)
+    put('qewl.mergedSchema', req.qewl.schemas.mergedSchema)
   } else {
-    req.qewl.schemas.mergedSchema = get('mergedSchema')
+    req.qewl.schemas.mergedSchema = get('qewl.mergedSchema')
   }
 
   req.qewl.emit('schemaGenerated', req.qewl.schemas.mergedSchema)

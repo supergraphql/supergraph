@@ -8,6 +8,7 @@ import { base } from './base'
 import { merge } from 'lodash'
 import { isBoolean } from 'util'
 import * as HttpsProxyAgent from 'https-proxy-agent'
+import { get, put } from 'memory-cache'
 
 export function remoteSchema({
   name,
@@ -60,8 +61,17 @@ export function remoteSchema({
       }
     }
 
+    if (name === undefined) {
+      name = `schema${Object.keys(req.qewl.schemas).length}`
+    }
+
     if (introspectionSchema === undefined) {
-      introspectionSchema = await introspectSchema(link)
+      if (!get(`qewl.${name}.introspection`)) {
+        introspectionSchema = await introspectSchema(link)
+        put(`qewl.${name}.introspection`, introspectionSchema)
+      } else {
+        introspectionSchema = get(`qewl.${name}.introspection`)
+      }
     }
 
     const executableSchema = makeRemoteExecutableSchema({
@@ -69,9 +79,6 @@ export function remoteSchema({
       link
     })
 
-    if (name === undefined) {
-      name = `schema${Object.keys(req.qewl.schemas).length}`
-    }
     req.qewl.schemas[name] = executableSchema
 
     next()
