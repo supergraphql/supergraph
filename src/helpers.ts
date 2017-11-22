@@ -19,13 +19,14 @@ export const delegate = (event: QewlRouterEvent) => (
   )
 }
 
-export const delegateQuery = (event: QewlRouterEvent) => async (
+export const delegateQuery = (event: QewlRouterEvent) => (
   query: string,
   vars?: { [key: string]: any }
 ) => {
 
-  const result = await graphql(event.context.qewl.schemas.mergedSchema, query, null, null, vars)
-  return result.data[0]
+  return graphql(event.context.qewl.schemas.mergedSchema, query, null, null, vars).then(result => {
+    return result.data[0]
+  })
 }
 
 export const addTypenameField = (info: GraphQLResolveInfo): GraphQLResolveInfo => {
