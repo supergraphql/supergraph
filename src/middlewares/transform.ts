@@ -20,15 +20,16 @@ import {
   TypeDefinitionNode,
   GraphQLSchema
 } from 'graphql'
-import { remove, cloneDeep } from 'lodash'
+import { remove } from 'lodash'
 import { get, put } from 'memory-cache'
+import { mergeSchemas } from 'graphql-tools'
 
 export function transform(finalSchema: string): AsyncRequestHandler {
   return base((req: Request, res: Response, next: NextFunction): any => {
     req.qewl.on('schemaGenerated', generatedSchema => {
       if (!get('qewl.finalSchema')) {
         const doc = parse(finalSchema)
-        const schemaDef: GraphQLSchema = cloneDeep(req.qewl.schemas.mergedSchema)
+        const schemaDef: GraphQLSchema = mergeSchemas({ schemas: [req.qewl.schemas.mergedSchema] }) as GraphQLSchema
         for (const definition of doc.definitions) {
           const name = (definition as TypeDefinitionNode).name.value
           const typeMapEntry: any = schemaDef.getTypeMap()[name]
