@@ -8,7 +8,7 @@ export function serve(serverOptions?: GraphQLServerOptions): ExpressHandler {
     await generateSchemaImpl(req)
     return graphqlExpress({
       ...serverOptions,
-      schema: req.qewl.schemas.mergedSchema,
+      schema: req.qewl.schemas.finalSchema || req.qewl.schemas.mergedSchema,
       context: req
     })(req, res, next)
   }

@@ -25,7 +25,7 @@ export const delegateQuery = (event: QewlRouterEvent) => (
 ) => {
 
   return graphql(event.context.qewl.schemas.mergedSchema, query, null, null, vars).then(result => {
-    return result.data[0]
+    return result.data
   })
 }
 

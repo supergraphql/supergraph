@@ -3,7 +3,7 @@ import { GraphQLSchema, GraphQLResolveInfo } from 'graphql'
 import { QewlRouterResolver, QewlRouterEvent } from './types'
 
 export class Qewl extends EventEmitter {
-  public schemas: { mergedSchema?: GraphQLSchema, [name: string]: GraphQLSchema | string } = {}
+  public schemas: { mergedSchema?: GraphQLSchema, finalSchema?: GraphQLSchema, [name: string]: GraphQLSchema | string } = {}
 
   public resolvers: Array<{
     path: string

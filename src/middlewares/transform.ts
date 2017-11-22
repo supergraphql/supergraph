@@ -20,7 +20,7 @@ import {
   TypeDefinitionNode,
   GraphQLSchema
 } from 'graphql'
-import { remove } from 'lodash'
+import { remove, cloneDeep } from 'lodash'
 import { get, put } from 'memory-cache'
 
 export function transform(finalSchema: string): AsyncRequestHandler {
@@ -28,7 +28,7 @@ export function transform(finalSchema: string): AsyncRequestHandler {
     req.qewl.on('schemaGenerated', generatedSchema => {
       if (!get('qewl.finalSchema')) {
         const doc = parse(finalSchema)
-        const schemaDef: GraphQLSchema = req.qewl.schemas.mergedSchema as GraphQLSchema
+        const schemaDef: GraphQLSchema = cloneDeep(req.qewl.schemas.mergedSchema)
         for (const definition of doc.definitions) {
           const name = (definition as TypeDefinitionNode).name.value
           const typeMapEntry: any = schemaDef.getTypeMap()[name]
@@ -89,9 +89,10 @@ export function transform(finalSchema: string): AsyncRequestHandler {
         if (!doc.definitions.map(d => (d as TypeDefinitionNode).name.value).includes(queryType)) {
           delete (schemaDef as any)._queryType
         }
+        req.qewl.schemas.finalSchema = schemaDef
         put(`qewl.finalSchema`, schemaDef)
       } else {
-        req.qewl.schemas.mergedSchema = get(`qewl.finalSchema`)
+        req.qewl.schemas.finalSchema = get(`qewl.finalSchema`)
       }
     })
 
