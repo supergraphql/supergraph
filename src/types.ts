@@ -3,9 +3,12 @@ import {
   GraphQLTypeResolver,
   GraphQLIsTypeOfFn,
   GraphQLResolveInfo,
-  FieldNode
+  FieldNode,
+  ValidationContext,
+  GraphQLFieldResolver
 } from 'graphql'
 import { Request } from 'express'
+import { LogFunction } from 'apollo-server-core'
 
 export interface QewlMiddlewareHandler {
   (context: Request): void
@@ -43,4 +46,17 @@ export interface QewlRouterEvent {
   addFields: (fields: [FieldNode | string] | FieldNode | string) => void
 
   [key: string]: any
+}
+
+export interface QewlServerOptions {
+  formatError?: Function
+  rootValue?: any
+  logFunction?: LogFunction
+  formatParams?: Function
+  validationRules?: Array<(context: ValidationContext) => any>
+  formatResponse?: Function
+  fieldResolver?: GraphQLFieldResolver<any, any>
+  debug?: boolean
+  tracing?: boolean
+  cacheControl?: boolean
 }

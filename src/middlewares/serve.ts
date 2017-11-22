@@ -1,9 +1,9 @@
 import { ExpressHandler, graphqlExpress } from 'apollo-server-express'
-import { GraphQLServerOptions } from 'apollo-server-core/dist/graphqlOptions'
 import { Request, Response, NextFunction } from 'express'
 import { generateSchemaImpl } from './generateSchema'
+import { QewlServerOptions } from '../types'
 
-export function serve(serverOptions?: GraphQLServerOptions): ExpressHandler {
+export function serve(serverOptions?: QewlServerOptions): ExpressHandler {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await generateSchemaImpl(req)
     return graphqlExpress({
