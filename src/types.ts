@@ -38,7 +38,7 @@ export interface QewlRouterEvent {
     operationName: string,
     args?: any
   ) => any
-  delegateQuery: (query: string, args?: { [key: string]: any }) => any
+  delegateQuery: (query: string, vars?: { [key: string]: any }) => any
   addTypeNameField: () => void
   addFields: (fields: [FieldNode | string] | FieldNode | string) => void
 

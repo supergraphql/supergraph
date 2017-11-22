@@ -1,8 +1,6 @@
-import { parse } from 'graphql'
+import { graphql } from 'graphql'
 import {
   GraphQLResolveInfo,
-  DocumentNode,
-  OperationDefinitionNode,
   FieldNode
 } from 'graphql'
 import { QewlRouterEvent } from './types'
@@ -21,31 +19,13 @@ export const delegate = (event: QewlRouterEvent) => (
   )
 }
 
-export const delegateQuery = (event: QewlRouterEvent) => (
+export const delegateQuery = (event: QewlRouterEvent) => async (
   query: string,
-  args?: { [key: string]: any }
+  vars?: { [key: string]: any }
 ) => {
-  const document: DocumentNode = parse(query)
 
-  const operationDefinition: OperationDefinitionNode = document
-    .definitions[0] as OperationDefinitionNode
-  const operationType: 'query' | 'mutation' | 'subscription' =
-    operationDefinition.operation
-  const operationName: string = (operationDefinition.selectionSet.selections[0] as any)
-    .name.value
-  const fields: [FieldNode] = (operationDefinition.selectionSet.selections[0] as any)
-    .selectionSet.selections
-
-  const newInfo: GraphQLResolveInfo = JSON.parse(JSON.stringify(event.info))
-  newInfo.fieldNodes[0].selectionSet!.selections = fields
-
-  return event.mergeInfo.delegate(
-    operationType,
-    operationName,
-    args || event.args,
-    event.context,
-    newInfo
-  )
+  const result = await graphql(event.context.qewl.schemas.mergedSchema, query, null, null, vars)
+  return result.data[0]
 }
 
 export const addTypenameField = (info: GraphQLResolveInfo): GraphQLResolveInfo => {
