@@ -1,6 +1,6 @@
 # Qewl
 
-**Qewl** (pronounced: /kuːl/, as in: 'cool') is a **GraphQL Application Framework**.
+**Qewl** (pronounced: /kuːl/, as in: 'cool') is a **GraphQL Gateway Framework**.
 It is inspired by Koa, built on Apollo Server, and turns your GraphQL endpoint into a Koa-like application, with support for context, middleware, and many other features.
 
 It is great for setting up an API Gateway on top of existing GraphQL endpoint, applying concepts like **remote schemas** and **schema stitching**. But it also makes it very easy to set up a GraphQL Server **from scratch**.
