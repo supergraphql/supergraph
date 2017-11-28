@@ -1,12 +1,13 @@
 {
   "name": "qewl",
-  "description": "Middleware platform for GraphQL gateways",
+  "description": "GraphQL Gateway Framework",
   "version": "0.2.20",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
     "lint": "tslint ./src/**/*.ts",
-    "prettier": "prettier --single-quote --semi false --print-width 90 --write ./src/**/*.ts"
+    "prettier": "prettier --single-quote --semi false --print-width 90 --write ./src/**/*.ts",
+    "test": "nyc mocha ./dist/**/*.spec.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -47,14 +48,21 @@
     "node-fetch": "^1.7.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.5",
     "@types/express": "^4.0.39",
     "@types/lodash": "^4.14.85",
     "@types/memory-cache": "^0.2.0",
+    "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.52",
     "@types/node-fetch": "^1.6.7",
     "@types/zen-observable": "^0.5.3",
     "apollo-link": "^1.0.3",
+    "chai": "^4.1.2",
+    "codecov": "^3.0.0",
     "graphql": "^0.11.7",
+    "mocha": "^4.0.1",
+    "mocha-junit-reporter": "^1.15.0",
+    "nyc": "^11.3.0",
     "prettier": "1.8.2",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1"
