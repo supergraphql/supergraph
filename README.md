@@ -1,5 +1,10 @@
 # Qewl
 
+[![npm](https://img.shields.io/npm/v/qewl.svg?style=for-the-badge)]()
+[![CircleCI](https://img.shields.io/circleci/project/github/qewl/qewl.svg?style=for-the-badge)]()
+[![Codecov](https://img.shields.io/codecov/c/github/qewl/qewl.svg?style=for-the-badge)](https://codecov.io/gh/qewl/qewl)
+
+
 **Qewl** (pronounced: /kuːl/, as in: 'cool') is a **GraphQL Gateway Framework**.
 It is inspired by Koa, built on Apollo Server, and turns your GraphQL endpoint into a Koa-like application, with support for context, middleware, and many other features.
 
