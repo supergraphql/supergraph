@@ -1,7 +1,7 @@
 {
-  "name": "qewl",
-  "description": "GraphQL Gateway Framework",
-  "version": "0.2.20",
+  "name": "supergraph",
+  "description": "GraphQL Server Framework",
+  "version": "0.1.0",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc",
@@ -14,13 +14,13 @@
   "types": "./dist/index.d.ts",
   "license": "MIT",
   "author": "Kim Brandwijk <kim.brandwijk@gmail.com>",
-  "homepage": "https://github.com/kbrandwijk/qewl#readme",
+  "homepage": "https://github.com/supergraphql/supergraph#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kbrandwijk/qewl.git"
+    "url": "https://github.com/supergraphql/supergraph.git"
   },
   "bugs": {
-    "url": "https://github.com/kbrandwijk/qewl/issues"
+    "url": "https://github.com/supergraphql/supergraph/issues"
   },
   "keywords": [
     "graphql",

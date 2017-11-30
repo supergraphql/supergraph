@@ -62,15 +62,15 @@ export function remoteSchema({
     }
 
     if (name === undefined) {
-      name = `schema${Object.keys(req.qewl.schemas).length}`
+      name = `schema${Object.keys(req.supergraph.schemas).length}`
     }
 
     if (introspectionSchema === undefined) {
-      if (!get(`qewl.${name}.introspection`)) {
+      if (!get(`supergraph.${name}.introspection`)) {
         introspectionSchema = await introspectSchema(link)
-        put(`qewl.${name}.introspection`, introspectionSchema)
+        put(`supergraph.${name}.introspection`, introspectionSchema)
       } else {
-        introspectionSchema = get(`qewl.${name}.introspection`)
+        introspectionSchema = get(`supergraph.${name}.introspection`)
       }
     }
 
@@ -79,7 +79,7 @@ export function remoteSchema({
       link
     })
 
-    req.qewl.schemas[name] = executableSchema
+    req.supergraph.schemas[name] = executableSchema
 
     next()
   })

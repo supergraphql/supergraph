@@ -1,19 +1,19 @@
 import { Request, Response, NextFunction, AsyncRequestHandler } from 'express'
 import { base } from './base'
-import { QewlRouterResolver, QewlRouterEvent } from '../types'
+import { SuperGraphRouterResolver, SuperGraphRouterEvent } from '../types'
 
 // Todo: also support function for path
 export function resolver(
   path: string,
-  resolve: QewlRouterResolver | ((event: QewlRouterEvent) => Promise<any> | any)
+  resolve: SuperGraphRouterResolver | ((event: SuperGraphRouterEvent) => Promise<any> | any)
 ): AsyncRequestHandler {
   return base(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     // Guard
-    if (req.qewl.resolvers.some(r => r.path === path)) {
+    if (req.supergraph.resolvers.some(r => r.path === path)) {
       throw new Error(`${path}: You can only specify one resolver for a path`)
     }
 
-    req.qewl.resolvers.push({ path, resolver: resolve })
+    req.supergraph.resolvers.push({ path, resolver: resolve })
 
     next()
   })
@@ -21,7 +21,7 @@ export function resolver(
 
 export function resolvers(def: {
   [key: string]: {
-    [key: string]: QewlRouterResolver | ((event: QewlRouterEvent) => Promise<any> | any)
+    [key: string]: SuperGraphRouterResolver | ((event: SuperGraphRouterEvent) => Promise<any> | any)
   }
 }): AsyncRequestHandler {
   return base(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -29,11 +29,11 @@ export function resolvers(def: {
     for (const parent of Object.keys(def)) {
       for (const field of Object.keys(def[parent])) {
         const path = `${parent}.${field}`
-        if (req.qewl.resolvers.some(r => r.path === path)) {
+        if (req.supergraph.resolvers.some(r => r.path === path)) {
           throw new Error(`${path}: You can only specify one resolver for a path`)
         }
 
-        req.qewl.resolvers.push({ path, resolver: def[parent][field] })
+        req.supergraph.resolvers.push({ path, resolver: def[parent][field] })
       }
     }
 

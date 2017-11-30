@@ -1,126 +1,58 @@
-# Qewl
+# SuperGraph
 
-[![npm](https://img.shields.io/npm/v/qewl.svg?style=for-the-badge)]()
-[![CircleCI](https://img.shields.io/circleci/project/github/qewl/qewl.svg?style=for-the-badge)]()
-[![Codecov](https://img.shields.io/codecov/c/github/qewl/qewl.svg?style=for-the-badge)](https://codecov.io/gh/qewl/qewl)
+[![npm](https://img.shields.io/npm/v/supergraph.svg?style=for-the-badge)]()
+[![CircleCI](https://img.shields.io/circleci/project/github/supergraphql/supergraph.svg?style=for-the-badge)]()
+[![Codecov](https://img.shields.io/codecov/c/github/supergraphql/supergraph.svg?style=for-the-badge)](https://codecov.io/gh/supergraphql/supergraph)
 
 
-**Qewl** (pronounced: /kuːl/, as in: 'cool') is a **GraphQL Gateway Framework**.
+**SuperGraph** is a **GraphQL Server Framework**.
 It is inspired by Koa, built on Apollo Server, and turns your GraphQL endpoint into a Koa-like application, with support for context, middleware, and many other features.
 
 It is great for setting up an API Gateway on top of existing GraphQL endpoint, applying concepts like **remote schemas** and **schema stitching**. But it also makes it very easy to set up a GraphQL Server **from scratch**.
 
-Qewl is implemented as a set of Express middlewares, so you can build a GraphQL Server as easily as a regular web server!
+SuperGraph is implemented as a set of Express middlewares, so you can build a GraphQL Server as easily as a regular web server!
 
 ## Concepts
 
-Qewl bridges the gap between commonly used patterns for HTTP middleware frameworks like Koa and Express, and GraphQL endpoints.
+SuperGraph bridges the gap between commonly used patterns for HTTP middleware frameworks like Koa and Express, and GraphQL endpoints.
 A GraphQL server is composed of three components:
 - GraphQL schemas
 - Resolvers
 - Context
 
-Qewl uses these same three components:
+SuperGraph uses these same three components:
 - GraphQL schemas define the **routes** of our server
 - Resolvers define the **implementation** of these routes
 - Application middleware is used to construct the **context** passed to every resolver, and router middleware is used to add **common functionality** to the resolvers
 
 ## Installation
-Qewl requires **node v7.6.0** or higher for ES2015 and async function support. Following common practice, it has `apollo-link` and `graphql` specified as peer dependencies, so make sure you install those too.
+SuperGraph requires **node v7.6.0** or higher for ES2015 and async function support. Following common practice, it has `apollo-link` and `graphql` specified as peer dependencies, so make sure you install those too.
 ```bash
-$ yarn add qewl apollo-link graphql
+$ yarn add supergraph apollo-link graphql
 ```
 
 ## Examples
 
 ### [Getting started](./examples/getting-started#readme)
-Set up your first GraphQL Server in minutes using Express and Qewl.
+Set up your first GraphQL Server in minutes using Express and SuperGraph.
 
 ### [Deep Dive](./examples/deep-dive#readme)
-Qewl makes it easy to set up a GraphQL Server from scratch. But this example really takes it to the next level by combining two existing GraphQL endpoints, link them together, and apply some middleware on top.
-
-Below is an example implementation, showcasing the Qewl API:
-```ts
-import * as express from 'express'
-import { expressPlayground } from 'graphql-playground-middleware'
-import { schema, remoteSchema, use, resolve } from 'qewl'
-
-import { helloSchema } from './helloSchema'
-import { helloResolver } from './helloResolver'
-
-async function run() {
-
-  const app = express()
-  const graphql = express.Router()
-
-  // Context
-  graphql.use(
-    (req, res, next) => {
-      const token = req.headers.authorization ? (req.headers.authorization as string).split(' ')[1] : null
-      req.token = token
-      next()
-    }
-  )
-
-  // Schemas
-  graphql.use(
-    remoteSchema({
-      name: 'graphcoolSchema',
-      uri: process.env.GRAPHCOOL_ENDPOINT,
-      authenticationToken: (context) => (context.graphqlContext || {}).token
-    }),
-
-    schema({name: 'hello', schema: helloSchema}),
-
-    schema(`extend type Query { myPosts: [Post] }`)
-  )
-
-  // Resolvers middlewares
-  graphql.use(
-    use('Query', async (event, next) => {
-      // Do something before
-      const result = await next()
-      // Do something after
-      return result
-    })
-  )
-
-  // Resolvers
-  graphql.use(
-    resolve('Query.hello', { resolve: helloResolver }),
-
-    resolve('Query.myPosts', async(event) => {
-      return event.delegate('query', 'allPosts')),
-  )
-
-  // Endpoint
-  graphql.use(
-    serve()
-  )
-
-  app.use('/graphql', express.json(), graphql)
-  app.use('/playground', expressPlayground({ endpoint: '/graphql' }))
-
-  app.listen(3000, () => console.log('Server running. Open http://localhost:3000/playground to run queries.'))
-}
-
-run().catch(console.error.bind(console))
-```
+SuperGraph makes it easy to set up a GraphQL Server from scratch. But this example really takes it to the next level by combining two existing GraphQL endpoints, link them together, and apply some middleware on top.
 
 ## Documentation
 
 ### Express Request
 
-Qewl add a `qewl` object to the Express Request context, with the following structure. For normal use cases, you never have to modify anything directly.
-- `req.qewl.context.schemas` will contain all GraphQL schemas
-- `req.qewl.context.resolvers` will contain all GraphQL resolver functions
-- `req.qewl.context.middlewares` will contain all GraphQL middleware functions
-- `req.qewl.context.mergedSchema` will contain the final schema used for your endpoint
+SuperGraph add a `supergraph` object to the Express Request context, with the following structure. For normal use cases, you never have to modify anything directly.
+- `req.supergraph.context.schemas` will contain all GraphQL schemas
+- `req.supergraph.context.resolvers` will contain all GraphQL resolver functions
+- `req.supergraph.context.middlewares` will contain all GraphQL middleware functions
+- `req.supergraph.context.mergedSchema` will contain the final schema used for your endpoint
 
 ### `schema({name?: string, schema: GraphQLSchema | string})` or
 ### `schema(schema: GraphQLSchema | string)`
 
-Adds a GraphQL schema to the Qewl application. This can either be a full GraphQLSchema or a Type definition string. Optionally you can specify a name for the schema, so you can reference it anywhere using `context.schemas.schemaName`. This is actually a convenient shorthand for the `schema` Qewl middleware function: `use(schema(...))`
+Adds a GraphQL schema to the SuperGraph application. This can either be a full GraphQLSchema or a Type definition string. Optionally you can specify a name for the schema, so you can reference it anywhere using `context.schemas.schemaName`. This is actually a convenient shorthand for the `schema` SuperGraph middleware function: `use(schema(...))`
 
 <h3><pre><code>remoteSchema({
   name?: string,
@@ -137,8 +69,8 @@ remoteSchema({
   forwardHeaders?: boolean | Array<string>
 })</code></pre></h3>
 
-Adds a schema for a remote GraphQL endpoint to the Qewl Application. You can either specify a URL for the endpoint, or pass in an existing `ApolloLink`.
-You can optionally pass in an introspectionSchema. If you don't, Qewl will run the introspection query against your endpoint to retrieve the schema.
+Adds a schema for a remote GraphQL endpoint to the SuperGraph Application. You can either specify a URL for the endpoint, or pass in an existing `ApolloLink`.
+You can optionally pass in an introspectionSchema. If you don't, SuperGraph will run the introspection query against your endpoint to retrieve the schema.
 You can also optionally pass in a function that retrieves the authenticationToken from the GraphQL context. It will be added as Bearer token to the Authorization header for this remote endpoint. For more complex scenarios, use the possibility to pass in your own `ApolloLink` definition.
 
 ### `use(path: '...', fn: async (event, next) => {...}`)
@@ -173,7 +105,7 @@ Specify a merge (schema stitching) resolver for a GraphQL path. You can only spe
 
 ### `await serve({serverOptions})`
 
-This method exposes the Express middleware for your Qewl application. You add it to your GraphQL Express route (`/graphql`). It accepts the following Apollo Server serverOptions, that it will pass through to Apollo Server:
+This method exposes the Express middleware for your SuperGraph application. You add it to your GraphQL Express route (`/graphql`). It accepts the following Apollo Server serverOptions, that it will pass through to Apollo Server:
 * **rootValue**: the value passed to the first resolve function
 * **formatError**: a function to apply to every error before sending the response to clients
 * **validationRules**: additional GraphQL validation rules to be applied to client-specified queries
@@ -184,7 +116,7 @@ This method exposes the Express middleware for your Qewl application. You add it
 
 ### Helper methods
 
-Qewl comes with a number of helper methods that you can use inside your resolvers:
+SuperGraph comes with a number of helper methods that you can use inside your resolvers:
 
 #### `addFields(fields: [FieldNode | string] | FieldNode | string)`
 
@@ -208,8 +140,8 @@ Support for other server frameworks (Hapi, Koa, Restify, Lambda, Micro and Azure
 
 ## Additional middlewares
 
-Additional useful Qewl application and router middlewares (for logging, authentication, mocking, etc.) will be released soon as a separate package!
+Additional useful SuperGraph application and router middlewares (for logging, authentication, mocking, etc.) will be released soon as a separate package!
 
 ## Contributing
 
-If you run into any issue using Qewl, or if you have a feature request, please open an [issue](https://github.com/kbrandwijk/qewl/issues/new).
+If you run into any issue using SuperGraph, or if you have a feature request, please open an [issue](https://github.com/supergraphql/supergraph/issues/new).
