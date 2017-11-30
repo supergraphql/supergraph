@@ -3,9 +3,9 @@ import {
   GraphQLResolveInfo,
   FieldNode
 } from 'graphql'
-import { QewlRouterEvent } from './types'
+import { SuperGraphRouterEvent } from './types'
 
-export const delegate = (event: QewlRouterEvent) => (
+export const delegate = (event: SuperGraphRouterEvent) => (
   operationType: 'query' | 'mutation' | 'subscription',
   operationName: string,
   args?: any
@@ -19,12 +19,12 @@ export const delegate = (event: QewlRouterEvent) => (
   )
 }
 
-export const delegateQuery = (event: QewlRouterEvent) => (
+export const delegateQuery = (event: SuperGraphRouterEvent) => (
   query: string,
   vars?: { [key: string]: any }
 ) => {
 
-  return graphql(event.context.qewl.schemas.mergedSchema, query, null, null, vars).then(result => {
+  return graphql(event.context.supergraph.schemas.mergedSchema, query, null, null, vars).then(result => {
     return result.data
   })
 }
@@ -62,7 +62,7 @@ export const addFields = (
   return newInfo
 }
 
-export const addHelpers = (event: QewlRouterEvent) => {
+export const addHelpers = (event: SuperGraphRouterEvent) => {
   event.delegate = delegate(event)
   event.delegateQuery = delegateQuery(event)
   event.addFields = (fields: [FieldNode | string] | FieldNode | string) =>

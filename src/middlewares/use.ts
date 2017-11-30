@@ -1,10 +1,10 @@
 import { Request, Response, AsyncRequestHandler, NextFunction } from 'express'
-import { QewlRouterMiddlewareHandler } from '../types'
+import { SuperGraphRouterMiddlewareHandler } from '../types'
 import { base } from './base'
 import { GraphQLResolveInfo } from 'graphql'
 import { addHelpers } from '../helpers'
 
-export function use(path: string, fn: QewlRouterMiddlewareHandler): AsyncRequestHandler {
+export function use(path: string, fn: SuperGraphRouterMiddlewareHandler): AsyncRequestHandler {
   return base(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     // wrap the function
     const middlewareFunction = async (
@@ -18,7 +18,7 @@ export function use(path: string, fn: QewlRouterMiddlewareHandler): AsyncRequest
       addHelpers(event)
       return await fn(event, nxt)
     }
-    req.qewl.middlewares.push({ path, fn: middlewareFunction })
+    req.supergraph.middlewares.push({ path, fn: middlewareFunction })
 
     next()
   })

@@ -6,15 +6,15 @@ import { mergeSchemas } from 'graphql-tools'
 
 export function transform(finalSchema: string): AsyncRequestHandler {
   return base((req: Request, res: Response, next: NextFunction): any => {
-    req.qewl.on('schemaGenerated', generatedSchema => {
-      if (!get('qewl.finalSchema')) {
+    req.supergraph.on('schemaGenerated', generatedSchema => {
+      if (!get('supergraph.finalSchema')) {
         const doc = parse(finalSchema)
 
         // Merge, taking the definitions from the final schema.
         // Unfortunately, this breaks resolvers (https://github.com/apollographql/graphql-tools/issues/504)
         // And it doesn't apply onTypeConflict on the entire Query/Mutation types, just to individual fields
         const schemaDef: GraphQLSchema = mergeSchemas({
-          schemas: [req.qewl.schemas.mergedSchema, finalSchema],
+          schemas: [req.supergraph.schemas.mergedSchema, finalSchema],
           onTypeConflict: (l, r) => r
         }) as GraphQLSchema
 
@@ -31,7 +31,7 @@ export function transform(finalSchema: string): AsyncRequestHandler {
             ) as any).fields.map((f: any) => f.name.value)
             for (const key of queryFieldKeys) {
               if (newQueryTypeFields.includes(key)) {
-                queryFields[key].resolve = req.qewl.schemas.mergedSchema.getQueryType().getFields()[
+                queryFields[key].resolve = req.supergraph.schemas.mergedSchema.getQueryType().getFields()[
                   key
                 ].resolve
               } else {
@@ -54,7 +54,7 @@ export function transform(finalSchema: string): AsyncRequestHandler {
             ) as any).fields.map((f: any) => f.name.value)
             for (const key of mutationFieldKeys) {
               if (newMutationTypeFields.includes(key)) {
-                mutationFields[key].resolve = req.qewl.schemas.mergedSchema.getMutationType().getFields()[
+                mutationFields[key].resolve = req.supergraph.schemas.mergedSchema.getMutationType().getFields()[
                   key
                 ].resolve
               } else {
@@ -81,7 +81,7 @@ export function transform(finalSchema: string): AsyncRequestHandler {
               if (newSubscriptionTypeFields.includes(key)) {
                 subscriptionFields[
                   key
-                ].resolve = req.qewl.schemas.mergedSchema.getSubscriptionType().getFields()[key].resolve
+                ].resolve = req.supergraph.schemas.mergedSchema.getSubscriptionType().getFields()[key].resolve
               } else {
                 delete schemaDef.getSubscriptionType().getFields()[key]
               }
@@ -89,10 +89,10 @@ export function transform(finalSchema: string): AsyncRequestHandler {
           }
         }
 
-        req.qewl.schemas.finalSchema = schemaDef
-        put(`qewl.finalSchema`, schemaDef)
+        req.supergraph.schemas.finalSchema = schemaDef
+        put(`supergraph.finalSchema`, schemaDef)
       } else {
-        req.qewl.schemas.finalSchema = get(`qewl.finalSchema`)
+        req.supergraph.schemas.finalSchema = get(`supergraph.finalSchema`)
       }
     })
 

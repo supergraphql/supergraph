@@ -14,7 +14,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-    working_directory: ~/qewl
+    working_directory: ~/supergraph
 
     steps:
       - checkout
@@ -36,7 +36,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: run tests and report
-          command: 'npx nyc -r html --report-dir reports/coverage/html mocha ~/qewl/dist/**/*.spec.js --reporter=xunit --reporter-options output=reports/test-results.xml'
+          command: 'npx nyc -r html --report-dir reports/coverage/html mocha ~/supergraph/dist/**/*.spec.js --reporter=xunit --reporter-options output=reports/test-results.xml'
       - run:
           name: generate test coverage report
           command: 'npx nyc report --reporter=text-lcov > reports/coverage/coverage.lcov'

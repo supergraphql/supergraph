@@ -10,28 +10,28 @@ import {
 import { Request } from 'express'
 import { LogFunction } from 'apollo-server-core'
 
-export interface QewlMiddlewareHandler {
+export interface SuperGraphMiddlewareHandler {
   (context: Request): void
 }
 
-export interface QewlContext {
+export interface SuperGraphContext {
   schemas: { [key: string]: GraphQLSchema | string }
   req?: Request
   [key: string]: any
 }
 
-export interface QewlRouterMiddlewareHandler {
-  (event: QewlRouterEvent, next: any): Promise<any> | any
+export interface SuperGraphRouterMiddlewareHandler {
+  (event: SuperGraphRouterEvent, next: any): Promise<any> | any
 }
 
-export interface QewlRouterResolver {
+export interface SuperGraphRouterResolver {
   fragment?: string
-  resolve: (event: QewlRouterEvent) => Promise<any> | any
+  resolve: (event: SuperGraphRouterEvent) => Promise<any> | any
   __resolveType?: GraphQLTypeResolver<any, any>
   __isTypeOf?: GraphQLIsTypeOfFn<any, any>
 }
 
-export interface QewlRouterEvent {
+export interface SuperGraphRouterEvent {
   parent: any
   args: { [key: string]: any }
   context: { [key: string]: any }
@@ -48,7 +48,7 @@ export interface QewlRouterEvent {
   [key: string]: any
 }
 
-export interface QewlServerOptions {
+export interface SuperGraphServerOptions {
   formatError?: Function
   rootValue?: any
   logFunction?: LogFunction

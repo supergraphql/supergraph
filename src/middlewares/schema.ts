@@ -12,7 +12,7 @@ export function schema(
     }
 
     if (!def.name) {
-      def.name = `schema${Object.keys(req.qewl.schemas).length}`
+      def.name = `schema${Object.keys(req.supergraph.schemas).length}`
     }
 
     if (typeof def.schema === 'string') {
@@ -22,7 +22,7 @@ export function schema(
       } catch (e) {}
     }
 
-    req.qewl.schemas[def.name] = def.schema
+    req.supergraph.schemas[def.name] = def.schema
 
     next()
   })

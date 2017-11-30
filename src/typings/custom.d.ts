@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express'
-import { Qewl } from '../Qewl';
+import { SuperGraph } from '../SuperGraph';
 
 declare module 'express' {
   export interface Request {
-    qewl: Qewl
+    supergraph: SuperGraph
   }
 
   export interface AsyncRequestHandler {

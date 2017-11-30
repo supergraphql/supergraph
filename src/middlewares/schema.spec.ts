@@ -8,18 +8,18 @@ describe('schema', () => {
     let request: any
 
     beforeEach(function() {
-        request = { qewl: undefined }
+        request = { supergraph: undefined }
     })
 
     describe('Express middleware function', () => {
         it('should return a function', () => {
             mw = schema({schema: ''})
-            expect(mw).to.be.a('Function', 'Qewl middleware should return a function')
+            expect(mw).to.be.a('Function', 'SuperGraph middleware should return a function')
         })
 
         it('should accept three arguments', () => {
             mw = schema({schema: ''})
-            expect(mw.length).to.equal(3, 'Qewl middleware should return a function with 3 arguments')
+            expect(mw.length).to.equal(3, 'SuperGraph middleware should return a function with 3 arguments')
         })
 
         it('should call next() once', function() {
@@ -36,7 +36,7 @@ describe('schema', () => {
             mw = schema({name: 'Test', schema: 'type Query { dummy: String }'})
             // tslint:disable-next-line:no-empty
             mw(request, null, () => {})
-            expect(Object.keys(request.qewl.schemas)).to.contain('Test', 'Schema not added with passed in name')
+            expect(Object.keys(request.supergraph.schemas)).to.contain('Test', 'Schema not added with passed in name')
         })
 
 
@@ -44,28 +44,28 @@ describe('schema', () => {
             mw = schema('type Query { dummy: String }')
             // tslint:disable-next-line:no-empty
             mw(request, null, () => {})
-            expect(Object.keys(request.qewl.schemas).length).to.equal(1, 'Schema not added to context')
+            expect(Object.keys(request.supergraph.schemas).length).to.equal(1, 'Schema not added to context')
         })
 
         it('should add a schema passed in as an object with string to the context', () => {
             mw = schema({schema: 'type Query { dummy: String }'})
             // tslint:disable-next-line:no-empty
             mw(request, null, () => {})
-            expect(Object.keys(request.qewl.schemas).length).to.equal(1, 'Schema not added to context')
+            expect(Object.keys(request.supergraph.schemas).length).to.equal(1, 'Schema not added to context')
         })
 
         it('should add a schema passed in as GraphQLSchema to the context', () => {
             mw = schema(makeExecutableSchema({ typeDefs: 'type Query { dummy: String }'}))
             // tslint:disable-next-line:no-empty
             mw(request, null, () => {})
-            expect(Object.keys(request.qewl.schemas).length).to.equal(1, 'Schema not added to context')
+            expect(Object.keys(request.supergraph.schemas).length).to.equal(1, 'Schema not added to context')
         })
 
         it('should add a schema passed in as an object with GraphQLSchema to the context', () => {
             mw = schema({schema: makeExecutableSchema({ typeDefs: 'type Query { dummy: String }'})})
             // tslint:disable-next-line:no-empty
             mw(request, null, () => {})
-            expect(Object.keys(request.qewl.schemas).length).to.equal(1, 'Schema not added to context')
+            expect(Object.keys(request.supergraph.schemas).length).to.equal(1, 'Schema not added to context')
         })
     })
 })

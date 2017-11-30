@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, AsyncRequestHandler } from 'express'
 import { base } from './base'
-import { QewlRouterEvent, QewlRouterResolver } from '../types'
+import { SuperGraphRouterEvent, SuperGraphRouterResolver } from '../types'
 import { GraphQLResolveInfo } from 'graphql/type/definition'
 import { addHelpers } from '../helpers'
 import { set, merge } from 'lodash'
@@ -16,15 +16,15 @@ export function generateSchema(): AsyncRequestHandler {
 }
 
 export function generateSchemaImpl(req: Request) {
-  if (Object.keys(req.qewl.schemas).length === 0) {
+  if (Object.keys(req.supergraph.schemas).length === 0) {
     throw new Error('No schemas defined')
   }
 
   // Only construct schema once
-  if (!get('qewl.mergedSchema')) {
+  if (!get('supergraph.mergedSchema')) {
     // Apply router resolvers
     const resolvers = (mergeInfo: any) => {
-      const resolverBlocks: Array<any> = req.qewl.resolvers.map(resolver =>
+      const resolverBlocks: Array<any> = req.supergraph.resolvers.map(resolver =>
         generateResolverBlock(mergeInfo, resolver)
       )
 
@@ -34,33 +34,33 @@ export function generateSchemaImpl(req: Request) {
     }
 
     // MergeSchemas
-    const schemasToMerge = Object.keys(req.qewl.schemas).map(
-      key => req.qewl.schemas[key]
+    const schemasToMerge = Object.keys(req.supergraph.schemas).map(
+      key => req.supergraph.schemas[key]
     )
 
-    req.qewl.schemas.mergedSchema = mergeSchemas({
+    req.supergraph.schemas.mergedSchema = mergeSchemas({
       schemas: schemasToMerge,
       resolvers
     })
 
     // Apply router middlewares
-    for (const middleware of req.qewl.middlewares) {
-      addMiddleware(req.qewl.schemas.mergedSchema, middleware.path, middleware.fn)
+    for (const middleware of req.supergraph.middlewares) {
+      addMiddleware(req.supergraph.schemas.mergedSchema, middleware.path, middleware.fn)
     }
 
-    put('qewl.mergedSchema', req.qewl.schemas.mergedSchema)
+    put('supergraph.mergedSchema', req.supergraph.schemas.mergedSchema)
   } else {
-    req.qewl.schemas.mergedSchema = get('qewl.mergedSchema')
+    req.supergraph.schemas.mergedSchema = get('supergraph.mergedSchema')
   }
 
-  req.qewl.emit('schemaGenerated', req.qewl.schemas.mergedSchema)
+  req.supergraph.emit('schemaGenerated', req.supergraph.schemas.mergedSchema)
 }
 
 function generateResolverBlock(
   mergeInfo: any,
   resolver: {
     path: string
-    resolver: QewlRouterResolver | ((event: QewlRouterEvent) => Promise<any> | any)
+    resolver: SuperGraphRouterResolver | ((event: SuperGraphRouterEvent) => Promise<any> | any)
   }
 ): Promise<any> {
   // Create object from path -> apparently, can also use _.set and _.get here :D
@@ -83,7 +83,7 @@ function generateResolverBlock(
   return resolverObject
 }
 
-function wrap(fn: ((event: QewlRouterEvent) => Promise<any> | any), mergeInfo: any) {
+function wrap(fn: ((event: SuperGraphRouterEvent) => Promise<any> | any), mergeInfo: any) {
   return async (
     parent: any,
     args: { [key: string]: any },
